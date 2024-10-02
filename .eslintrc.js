@@ -12,7 +12,7 @@ module.exports = {
     },
   },
   rules: {
-    // You can add custom rules here
+    // add custom rules here
   },
   settings: {
     react: {

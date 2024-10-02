@@ -34,7 +34,7 @@ jobs:
       with:
         node-version: '16.x'
     - run: npm ci
-    - run: npm run lint
+    - run: npx eslint .
 
   typecheck:
     runs-on: ubuntu-latest
