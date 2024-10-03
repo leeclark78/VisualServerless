@@ -1,67 +1,89 @@
-import React, { useState, useCallback } from 'react';
+import React, { useCallback, ChangeEvent } from 'react';
 import ReactFlow, {
-  Background,
-  Controls,
-  MiniMap,
   Node,
   Edge,
   addEdge,
-  removeElements,
-  Elements,
   Connection,
-  OnLoadParams,
-} from 'react-flow-renderer';
+  useNodesState,
+  useEdgesState,
+  Controls,
+  MiniMap,
+  Background,
+} from 'reactflow';
+import 'reactflow/dist/style.css';
 import { LambdaNode, ApiGatewayNode, DynamoDBNode } from './CustomNodes';
 import Toolbar from './Toolbar';
 
-const nodeTypes = {
-  lambda: LambdaNode,
-  apiGateway: ApiGatewayNode,
-  dynamoDB: DynamoDBNode,
-};
-
 const Graph: React.FC = () => {
-  const [elements, setElements] = useState<Elements>([]);
-  const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   const onConnect = useCallback((params: Connection) => 
-    setElements((els) => addEdge(params, els)), []);
+    setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
-  const onElementsRemove = useCallback((elementsToRemove) => 
-    setElements((els) => removeElements(elementsToRemove, els)), []);
+  const onElementsRemove = useCallback((elementsToRemove: Node[] | Edge[]) => {
+    setNodes((nds) => nds.filter((n) => !elementsToRemove.some((e) => 'id' in e && e.id === n.id)));
+    setEdges((eds) => eds.filter((e) => !elementsToRemove.some((el) => 'id' in el && el.id === e.id)));
+  }, [setNodes, setEdges]);
 
   const addNode = useCallback((nodeType: string) => {
     const newNode: Node = {
-      id: `${Date.now()}`,
+      id: `${nodeType}-${Date.now()}`,
       type: nodeType,
-      data: { label: `${nodeType} ${elements.length + 1}` },
+      data: { label: `${nodeType} node` },
       position: { x: Math.random() * 500, y: Math.random() * 500 },
     };
-    setElements((els) => els.concat(newNode));
-  }, [elements]);
+    setNodes((nds) => nds.concat(newNode));
+  }, [setNodes]);
 
-  const onLoad = (reactFlowInstance: OnLoadParams) => {
-    setRfInstance(reactFlowInstance);
-    reactFlowInstance.fitView();
+  const onExport = useCallback(() => {
+    const flow = { nodes, edges };
+    const json = JSON.stringify(flow);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'flow.json';
+    link.click();
+  }, [nodes, edges]);
+
+  const onImport = useCallback((event: ChangeEvent<HTMLInputElement>) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (e) => {
+      if (e.target?.result) {
+        const flow = JSON.parse(e.target.result as string);
+        setNodes(flow.nodes || []);
+        setEdges(flow.edges || []);
+      }
+    };
+    if (event.target.files) {
+      fileReader.readAsText(event.target.files[0]);
+    }
+  }, [setNodes, setEdges]);
+
+  const nodeTypes = {
+    lambda: LambdaNode,
+    apiGateway: ApiGatewayNode,
+    dynamoDB: DynamoDBNode,
   };
 
   return (
-    <div>
-      <Toolbar onAdd={addNode} />
-      <div style={{ height: '80vh', width: '100%' }}>
-        <ReactFlow
-          elements={elements}
-          onConnect={onConnect}
-          onElementsRemove={onElementsRemove}
-          onLoad={onLoad}
-          deleteKeyCode={46}
-          nodeTypes={nodeTypes}
-        >
-          <Controls />
-          <MiniMap />
-          <Background color="#aaa" gap={16} />
-        </ReactFlow>
-      </div>
+    <div style={{ height: '100vh', width: '100%' }}>
+      <ReactFlow
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        onConnect={onConnect}
+        onNodesDelete={onElementsRemove}
+        onEdgesDelete={onElementsRemove}
+        nodeTypes={nodeTypes}
+      >
+        <Controls />
+        <MiniMap />
+        <Background color="#aaa" gap={16} />
+      </ReactFlow>
+      <Toolbar onAddNode={addNode} onExport={onExport} onImport={onImport} />
     </div>
   );
 };

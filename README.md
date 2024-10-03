@@ -9,6 +9,7 @@ A visual approach to serverless development.
 - Toolbar for adding specific node types
 - Dynamic addition and removal of nodes
 - Automatic edge creation between nodes
+- Export and import functionality for saving and loading designs
 
 ## Getting Started
 
@@ -33,10 +34,12 @@ The Graph component uses react-flow-renderer to display an interactive visualiza
 - Add new nodes of specific types (Lambda, API Gateway, DynamoDB) using the toolbar
 - Remove nodes by selecting them and pressing the 'Delete' key
 - Create connections by dragging from one node's handle to another
+- Export the current graph design as a JSON file
+- Import a previously saved graph design
 
 ### Toolbar
 
-The Toolbar component provides buttons to add different types of serverless resources to the graph.
+The Toolbar component provides buttons to add different types of serverless resources to the graph, as well as export and import functionality.
 
 ### Custom Nodes
 
@@ -44,33 +47,3 @@ Custom node components visually represent different types of serverless resource
 - Lambda Function
 - API Gateway
 - DynamoDB Table
-
-### Toolbar
-
-The Toolbar component provides buttons to add different types of serverless resources to the graph.
-
-### Custom Nodes
-
-Custom node components visually represent different types of serverless resources:
-- Lambda Function
-- API Gateway
-- DynamoDB Table
-
-### Toolbar
-
-The Toolbar component provides buttons to add different types of serverless resources to the graph.
-
-### Custom Nodes
-
-Custom node components visually represent different types of serverless resources:
-- Lambda Function
-- API Gateway
-- DynamoDB Table
-
-- Add new nodes by clicking the 'Add Node' button
-- Remove nodes by selecting them and pressing the 'Delete' key
-- Create connections by dragging from one node's handle to another
-
-- Add new nodes by clicking the 'Add Node' button
-- Remove nodes by selecting them and pressing the 'Delete' key
-- Create connections by dragging from one node's handle to another
