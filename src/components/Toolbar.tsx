@@ -1,12 +1,17 @@
 import React from 'react';
 
-export const Toolbar: React.FC = () => {
+interface ToolbarProps {
+  onAdd: (nodeType: string) => void;
+}
+
+const Toolbar: React.FC<ToolbarProps> = ({ onAdd }) => {
   return (
-    <div className="toolbar">
-      <button>Add Node</button>
-      <button>Add Edge</button>
-      <button>Export</button>
-      <button>Import</button>
+    <div style={{ marginBottom: '20px' }}>
+      <button onClick={() => onAdd('lambda')}>Add Lambda</button>
+      <button onClick={() => onAdd('apiGateway')}>Add API Gateway</button>
+      <button onClick={() => onAdd('dynamoDB')}>Add DynamoDB</button>
     </div>
   );
 };
+
+export default Toolbar;
