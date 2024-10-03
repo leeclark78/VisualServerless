@@ -2,6 +2,10 @@
 
 A visual approach to serverless development.
 
+## Features
+
+- Basic graph visualization of serverless resources
+
 ## Getting Started
 
 1. Clone the repository
@@ -15,3 +19,9 @@ A visual approach to serverless development.
 - `npm run build`: Builds the app for production
 - `npm run lint`: Runs the linter
 - `npm run typecheck`: Runs the TypeScript type checker
+
+## Components
+
+### Graph
+
+The Graph component uses react-flow-renderer to display a visual representation of serverless resources and their connections.
