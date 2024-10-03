@@ -59,3 +59,33 @@ The project consists of a frontend (React with TypeScript) and a backend (Expres
 ### Running Tests
 
 ```
+npm test
+```
+
+### Linting
+
+```
+npm run lint
+```
+
+### Type Checking
+
+```
+npm run type-check
+```
+
+### Building for Production
+
+```
+npm run build
+
+This builds the app for production to the `build` folder.
+
+### Contributing
+
+We welcome contributions to the project! Please read our [contributing guidelines](CONTRIBUTING.md) for more details.
+
+License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+```
