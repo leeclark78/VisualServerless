@@ -1,10 +1,15 @@
-import React from 'react';
-import ReactFlow, { 
-  Background, 
-  Controls, 
-  MiniMap, 
-  Node, 
-  Edge 
+import React, { useState, useCallback } from 'react';
+import ReactFlow, {
+  Background,
+  Controls,
+  MiniMap,
+  Node,
+  Edge,
+  addEdge,
+  removeElements,
+  Elements,
+  Connection,
+  OnLoadParams,
 } from 'react-flow-renderer';
 
 const initialNodes: Node[] = [
@@ -14,36 +19,48 @@ const initialNodes: Node[] = [
     data: { label: 'Input Node' },
     position: { x: 250, y: 25 },
   },
-  {
-    id: '2',
-    data: { label: 'Default Node' },
-    position: { x: 100, y: 125 },
-  },
-  {
-    id: '3',
-    type: 'output',
-    data: { label: 'Output Node' },
-    position: { x: 250, y: 250 },
-  },
-];
-
-const initialEdges: Edge[] = [
-  { id: 'e1-2', source: '1', target: '2' },
-  { id: 'e2-3', source: '2', target: '3' },
 ];
 
 const Graph: React.FC = () => {
+  const [elements, setElements] = useState<Elements>(initialNodes);
+  const [rfInstance, setRfInstance] = useState<OnLoadParams | null>(null);
+
+  const onConnect = useCallback((params: Connection) => 
+    setElements((els) => addEdge(params, els)), []);
+
+  const onElementsRemove = useCallback((elementsToRemove) => 
+    setElements((els) => removeElements(elementsToRemove, els)), []);
+
+  const addNode = useCallback(() => {
+    const newNode: Node = {
+      id: `${Date.now()}`,
+      data: { label: `Node ${elements.length + 1}` },
+      position: { x: Math.random() * 500, y: Math.random() * 500 },
+    };
+    setElements((els) => els.concat(newNode));
+  }, [elements]);
+
+  const onLoad = (reactFlowInstance: OnLoadParams) => {
+    setRfInstance(reactFlowInstance);
+    reactFlowInstance.fitView();
+  };
+
   return (
-    <div style={{ height: '100vh', width: '100%' }}>
+    <div style={{ height: '80vh', width: '100%' }}>
       <ReactFlow
-        nodes={initialNodes}
-        edges={initialEdges}
-        fitView
+        elements={elements}
+        onConnect={onConnect}
+        onElementsRemove={onElementsRemove}
+        onLoad={onLoad}
+        deleteKeyCode={46}
       >
         <Controls />
         <MiniMap />
         <Background color="#aaa" gap={16} />
       </ReactFlow>
+      <div style={{ textAlign: 'center', marginTop: '10px' }}>
+        <button onClick={addNode}>Add Node</button>
+      </div>
     </div>
   );
 };

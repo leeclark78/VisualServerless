@@ -4,7 +4,9 @@ A visual approach to serverless development.
 
 ## Features
 
-- Basic graph visualization of serverless resources
+- Interactive graph visualization of serverless resources
+- Dynamic addition and removal of nodes
+- Automatic edge creation between nodes
 
 ## Getting Started
 
@@ -24,4 +26,8 @@ A visual approach to serverless development.
 
 ### Graph
 
-The Graph component uses react-flow-renderer to display a visual representation of serverless resources and their connections.
+The Graph component uses react-flow-renderer to display an interactive visualization of serverless resources and their connections. Users can:
+
+- Add new nodes by clicking the 'Add Node' button
+- Remove nodes by selecting them and pressing the 'Delete' key
+- Create connections by dragging from one node's handle to another
